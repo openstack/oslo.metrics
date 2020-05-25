@@ -1,0 +1,5 @@
+build
+dev
+*.egg-info
+test.sock
+*.pyc

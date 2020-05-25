@@ -1,10 +1,6 @@
-============
-oslo.metrics
-============
+====================
+Oslo Metrics Library
+====================
 
-This library will allow instrumentation at Oslo library level for
-oslo.messaging and other common abstraction libraries, to get
-operational metrics.
-
-This library is currently under development, initial code drop is
-expected in June, 2020.
+This Oslo metrics API supports collecting metrics data from other Oslo
+libraries and exposing the metrics data to monitoring system.
