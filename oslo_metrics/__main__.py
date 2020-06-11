@@ -69,7 +69,8 @@ class MetricsListener():
         self.socket.close()
         self.start = False
 
-if __name__ == "__main__":
+
+def main():
     cfg.CONF(sys.argv[1:])
     m = MetricsListener(cfg.CONF.oslo_metrics.metrics_socket_file)
     mt = threading.Thread(target=m.serve)
@@ -87,3 +88,7 @@ if __name__ == "__main__":
         os.remove(cfg.CONF.oslo_metrics.metrics_socket_file)
         m.stop()
         httpd.server_close()
+
+
+if __name__ == "__main__":
+    main()
