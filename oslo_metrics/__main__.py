@@ -16,6 +16,7 @@
 import os
 import select
 import socket
+import stat
 import sys
 import threading
 from wsgiref.simple_server import make_server
@@ -48,9 +49,18 @@ class MetricsListener():
     def __init__(self, socket_path):
         self.socket_path = socket_path
         self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+        self.unlink(socket_path)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(self.socket_path)
         self.start = True
         self.router = message_router.MessageRouter()
+
+    def unlink(self, socket_path):
+        try:
+            os.unlink(socket_path)
+        except OSError:
+            if os.path.exists(socket_path):
+                raise
 
     def serve(self):
         while self.start:
@@ -74,7 +84,12 @@ class MetricsListener():
 
 def main():
     cfg.CONF(sys.argv[1:])
-    m = MetricsListener(cfg.CONF.oslo_metrics.metrics_socket_file)
+    socket_path = cfg.CONF.oslo_metrics.metrics_socket_file
+    m = MetricsListener(socket_path)
+    try:
+        os.chmod(socket_path, stat.S_IRWXU | stat.S_IRWXO)
+    except OSError:
+        LOG.error("Changing the mode of the file failed.... continuing")
     mt = threading.Thread(target=m.serve)
     LOG.info("Start oslo.metrics")
     mt.start()
