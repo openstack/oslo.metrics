@@ -15,6 +15,7 @@
 
 import os
 import select
+import signal
 import socket
 import stat
 import sys
@@ -82,6 +83,15 @@ class MetricsListener():
         self.start = False
 
 
+httpd = None
+
+
+def handle_sigterm(_signum, _frame):
+    LOG.debug("Caught sigterm")
+    shutdown_thread = threading.Thread(target=httpd.shutdown)
+    shutdown_thread.start()
+
+
 def main():
     cfg.CONF(sys.argv[1:])
     socket_path = cfg.CONF.oslo_metrics.metrics_socket_file
@@ -96,7 +106,9 @@ def main():
 
     app = make_wsgi_app()
     try:
+        global httpd
         httpd = make_server('', 3000, app)
+        signal.signal(signal.SIGTERM, handle_sigterm)
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
