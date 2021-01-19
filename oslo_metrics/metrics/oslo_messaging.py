@@ -15,56 +15,61 @@
 
 import prometheus_client
 
-standard_labels_for_server = [
+rpc_server_common_labels = [
     'exchange', 'topic', 'server', 'endpoint', 'namespace',
     'version', 'method', 'process'
 ]
-standard_labels_for_client = [
+rpc_client_common_labels = [
     'call_type', 'exchange', 'topic', 'namespace', 'version',
     'server', 'fanout', 'process'
 ]
 
+rpc_processing_seconds_buckets = [
+    0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0,
+    2.5, 5.0, 7.5, 10.0, 25.0, 50.0, 75.0, 100
+]
 
 # RPC Server Metrics
-rpc_server_count_for_exception = prometheus_client.Counter(
-    'oslo_messaging_rpc_server_exception',
-    'The number of times to hit Exception',
-    standard_labels_for_server + ['exception', ])
+rpc_server_invocation_start_total = prometheus_client.Counter(
+    'oslo_messaging_rpc_server_invocation_start_total',
+    'Total number of RPC invocation start. This doesn\'t count'
+    'if rpc server failed to find method from endpoints.',
+    rpc_server_common_labels)
 
-rpc_server_count_for_invocation_start = prometheus_client.Counter(
-    'oslo_messaging_rpc_server_invocation_start',
-    'The number of times to attempt to invoke method. It doesn\'t count'
-    'if rpc server failed to find method from endpoints',
-    standard_labels_for_server)
+rpc_server_invocation_end_total = prometheus_client.Counter(
+    'oslo_messaging_rpc_server_invocation_end_total',
+    'Total number of RPC invocation end.',
+    rpc_server_common_labels)
 
-rpc_server_count_for_invocation_end = prometheus_client.Counter(
-    'oslo_messaging_rpc_server_invocation_end',
-    'The number of times to finish to invoke method.',
-    standard_labels_for_server)
+rpc_server_processing_seconds = prometheus_client.Histogram(
+    'oslo_messaging_rpc_server_processing_seconds',
+    'Duration of RPC processing.',
+    rpc_server_common_labels,
+    buckets=rpc_processing_seconds_buckets)
 
-rpc_server_processing_time = prometheus_client.Histogram(
-    'oslo_messaging_rpc_server_processing_second',
-    'rpc server processing time[second]',
-    standard_labels_for_server)
-
+rpc_server_exception_total = prometheus_client.Counter(
+    'oslo_messaging_rpc_server_exception_total',
+    'Total number of exception while RPC processing.',
+    rpc_server_common_labels + ['exception'])
 
 # RPC Client Metrics
-rpc_client_count_for_exception = prometheus_client.Counter(
-    'oslo_messaging_rpc_client_exception',
-    'The number of times to hit Exception',
-    standard_labels_for_client + ['exception', ])
+rpc_client_invocation_start_total = prometheus_client.Counter(
+    'oslo_messaging_rpc_client_invocation_start_total',
+    'Total number of RPC invocation start.',
+    rpc_client_common_labels)
 
-rpc_client_count_for_invocation_start = prometheus_client.Counter(
-    'oslo_messaging_rpc_client_invocation_start',
-    'The number of times to invoke method',
-    standard_labels_for_client)
+rpc_client_invocation_end_total = prometheus_client.Counter(
+    'oslo_messaging_rpc_client_invocation_end_total',
+    'Total number of RPC invocation end.',
+    rpc_client_common_labels)
 
-rpc_client_count_for_invocation_end = prometheus_client.Counter(
-    'oslo_messaging_rpc_client_invocation_end',
-    'The number of times to invoke method',
-    standard_labels_for_client)
+rpc_client_processing_seconds = prometheus_client.Histogram(
+    'oslo_messaging_rpc_client_processing_seconds',
+    'Duration of RPC processing.',
+    rpc_client_common_labels,
+    buckets=rpc_processing_seconds_buckets)
 
-rpc_client_processing_time = prometheus_client.Histogram(
-    'oslo_messaging_rpc_client_processing_second',
-    'rpc client processing time[second]',
-    standard_labels_for_client)
+rpc_client_exception_total = prometheus_client.Counter(
+    'oslo_messaging_rpc_client_exception_total',
+    'Total number of exception while RPC processing.',
+    rpc_client_common_labels + ['exception', ])
