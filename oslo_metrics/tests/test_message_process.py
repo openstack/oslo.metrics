@@ -33,7 +33,7 @@ class TestProcessMessage(base.BaseTestCase):
     def test_process_counter(self):
         received_json = """{
   "module": "oslo_messaging",
-  "name": "rpc_server_count_for_invocation_start",
+  "name": "rpc_server_invocation_start_total",
   "action": {
     "action": "inc",
     "value": null
@@ -60,7 +60,7 @@ class TestProcessMessage(base.BaseTestCase):
     def test_process_histogram(self):
         received_json = """{
   "module": "oslo_messaging",
-  "name": "rpc_client_processing_time",
+  "name": "rpc_client_processing_seconds",
   "action": {
     "action": "observe",
     "value": 1.26
