@@ -69,11 +69,13 @@ class TestProcessMessage(base.BaseTestCase):
     "call_type": "call",
     "exchange": "foo",
     "topic": "bar",
+    "method": "get",
     "server": "foobar",
     "namespace": "ns",
     "version": "v2",
     "process": "done",
-    "fanout": "foo"
+    "fanout": "foo",
+    "timeout": 10
   }
 }""".encode()
 

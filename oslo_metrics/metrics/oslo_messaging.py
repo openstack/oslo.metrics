@@ -21,7 +21,7 @@ rpc_server_common_labels = [
 ]
 rpc_client_common_labels = [
     'call_type', 'exchange', 'topic', 'namespace', 'version',
-    'server', 'fanout', 'process'
+    'server', 'fanout', 'process', 'method', 'timeout'
 ]
 
 rpc_processing_seconds_buckets = [
