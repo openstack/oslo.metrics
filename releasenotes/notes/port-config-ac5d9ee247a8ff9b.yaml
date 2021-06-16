@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Port number to expose metrics in Prometheus format is now configurable.
