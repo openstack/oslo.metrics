@@ -17,11 +17,13 @@ import json
 
 
 class UnSupportedMetricActionError(Exception):
-    pass
+    def __init__(self, message=None):
+        self.message = message
 
 
 class MetricValidationError(Exception):
-    pass
+    def __init__(self, message=None):
+        self.message = message
 
 
 class MetricAction():
