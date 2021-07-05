@@ -8,12 +8,12 @@ A simple example of oslo.metrics in use::
     2020-06-11 15:59:53.459 5435 INFO oslo.metrics.__main__ [-] Start oslo.metrics
 
 Testing with DevStack
-#####################
+---------------------
 
 This section describes how to test out oslo.metrics and collect oslo.messaging metric data using Devstack.
 
 Download DevStack
------------------
+~~~~~~~~~~~~~~~~~
 
 .. code-block:: console
 
@@ -24,7 +24,7 @@ The ``devstack`` repo contains a script that installs OpenStack and
 templates for configuration files.
 
 Create a local.conf
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 Create a ``local.conf`` file with four passwords preset at the root of the
 devstack git repo.
@@ -46,7 +46,7 @@ This is the minimum required config to get started with Devstack including
 oslo.metrics.
 
 Start the install
------------------
+~~~~~~~~~~~~~~~~~
 
 .. code-block:: console
 
@@ -57,7 +57,7 @@ your internet connection. Many git trees and packages will be
 installed during this process.
 
 Start the Metrics Server
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: console
 
@@ -69,7 +69,7 @@ oslo.messaging metrics sending from OpenStack services.
 oslo.metrics exporter will serve on port 3000 by default.
 
 Example Output
---------------
+~~~~~~~~~~~~~~
 
 An example of oslo.metrics collecting metrics from Nova:
 
@@ -87,7 +87,7 @@ An example of oslo.metrics collecting metrics from Nova:
    2021-06-12 14:57:50.633 466289 INFO oslo.metrics.message_router [-] Perform action inc for rpc_client_invocation_end_total metrics`
 
 Gathering Metrics
------------------
+~~~~~~~~~~~~~~~~~
 
 To gather metrics from oslo.metrics, configure Prometheus to scrape from port
 3000 where oslo.metrics is running.
