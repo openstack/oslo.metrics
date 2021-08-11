@@ -41,6 +41,7 @@ pip-log.txt
 .stestr/
 test.sock
 .venv
+cover/
 
 # Translations
 *.mo
