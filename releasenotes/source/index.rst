@@ -6,4 +6,5 @@ oslo.metrics Release Notes
    :maxdepth: 1
 
    unreleased
+   xena
    wallaby
