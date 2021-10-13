@@ -33,7 +33,9 @@ oslo_metrics_configs = [
     cfg.StrOpt('metrics_socket_file',
                default='/var/tmp/metrics_collector.sock',
                help='Unix domain socket file to be used'
-                    'to send rpc related metrics'),
+                    ' to send rpc related metrics'),
+    cfg.IntOpt('prometheus_port', default=3000,
+               help='Port number to expose metrics in prometheus format.'),
 ]
 cfg.CONF.register_opts(oslo_metrics_configs, group='oslo_metrics')
 
@@ -107,7 +109,7 @@ def main():
     app = make_wsgi_app()
     try:
         global httpd
-        httpd = make_server('', 3000, app)
+        httpd = make_server('', CONF.oslo_metrics.prometheus_port, app)
         signal.signal(signal.SIGTERM, handle_sigterm)
         httpd.serve_forever()
     except KeyboardInterrupt:
