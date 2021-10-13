@@ -17,7 +17,6 @@ import os
 import select
 import signal
 import socket
-import stat
 import sys
 import threading
 from wsgiref.simple_server import make_server
@@ -99,7 +98,7 @@ def main():
     socket_path = cfg.CONF.oslo_metrics.metrics_socket_file
     m = MetricsListener(socket_path)
     try:
-        os.chmod(socket_path, stat.S_IRWXU | stat.S_IRWXO)
+        os.chmod(socket_path, 0o660)
     except OSError:
         LOG.error("Changing the mode of the file failed.... continuing")
     mt = threading.Thread(target=m.serve)
