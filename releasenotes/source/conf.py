@@ -58,8 +58,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'oslo.metrics Release Notes'
-copyright = u'2020, oslo.metrics Developers'
+project = 'oslo.metrics Release Notes'
+copyright = '2020, oslo.metrics Developers'
 
 # Release notes do not need a version in the title, they span
 # multiple versions.
@@ -208,8 +208,8 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     ('index', 'oslo.metricsReleaseNotes.tex',
-     u'oslo.metrics Release Notes Documentation',
-     u'oslo.metrics Developers', 'manual'),
+     'oslo.metrics Release Notes Documentation',
+     'oslo.metrics Developers', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -238,8 +238,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'oslo.metricsReleaseNotes',
-     u'oslo.metrics Release Notes Documentation',
-     [u'oslo.metrics Developers'], 1)
+     'oslo.metrics Release Notes Documentation',
+     ['oslo.metrics Developers'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -252,8 +252,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'oslo.metricsReleaseNotes',
-     u'oslo.metrics Release Notes Documentation',
-     u'oslo.metrics Developers', 'oslo.metricsReleaseNotes',
+     'oslo.metrics Release Notes Documentation',
+     'oslo.metrics Developers', 'oslo.metricsReleaseNotes',
      'One line description of project.',
      'Miscellaneous'),
 ]
