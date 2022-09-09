@@ -6,6 +6,7 @@ oslo.metrics Release Notes
    :maxdepth: 1
 
    unreleased
+   zed
    yoga
    xena
    wallaby
