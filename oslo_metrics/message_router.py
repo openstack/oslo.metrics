@@ -61,7 +61,7 @@ class MessageRouter():
             metric_with_label = getattr(metric_definition, "labels")
             metric_with_label = metric_with_label(**metric.labels)
         except AttributeError as e:
-            LOG.error("Failed to load labales func from metrics %s: %s" %
+            LOG.error("Failed to load labels func from metrics %s: %s" %
                       (metric.name, e))
             return
         LOG.info("Get labels with %s: %s" % (metric.name, metric.labels))
