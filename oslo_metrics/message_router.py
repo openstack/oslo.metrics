@@ -64,7 +64,7 @@ class MessageRouter():
             LOG.error("Failed to load labels func from metrics %s: %s" %
                       (metric.name, e))
             return
-        LOG.info("Get labels with %s: %s" % (metric.name, metric.labels))
+        LOG.debug("Get labels with %s: %s" % (metric.name, metric.labels))
 
         # perform action
         try:
@@ -77,5 +77,5 @@ class MessageRouter():
             LOG.error("Failed to perform metric actionv %s, %s: %s" %
                       (metric.action.action, metric.action.value, e))
             return
-        LOG.info("Perform action %s for %s metrics" %
-                 (metric.action.action, metric.name))
+        LOG.debug("Perform action %s for %s metrics" %
+                  (metric.action.action, metric.name))
