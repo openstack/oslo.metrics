@@ -1,0 +1,7 @@
+---
+other:
+  - |
+    Add a new option ``wsgi_silent_server`` to enable/disable STDOUT logs on
+    oslo.metrics wsgi prometheus exporter.
+    By default this new option will be set to ``True``, which means logs are
+    **not** going to be printed anymore.
