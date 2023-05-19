@@ -30,7 +30,7 @@ from oslo_metrics import message_router
 
 oslo_metrics_configs = [
     cfg.StrOpt('metrics_socket_file',
-               default='/var/tmp/metrics_collector.sock',
+               default='/var/tmp/metrics_collector.sock',  # nosec
                help='Unix domain socket file to be used'
                     ' to send rpc related metrics'),
     cfg.IntOpt('prometheus_port', default=3000,
@@ -98,7 +98,7 @@ def main():
     socket_path = cfg.CONF.oslo_metrics.metrics_socket_file
     m = MetricsListener(socket_path)
     try:
-        os.chmod(socket_path, 0o660)
+        os.chmod(socket_path, 0o600)
     except OSError:
         LOG.error("Changing the mode of the file failed.... continuing")
     mt = threading.Thread(target=m.serve)
