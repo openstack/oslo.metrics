@@ -33,8 +33,8 @@ oslo_metrics_configs = [
                default='/var/tmp/metrics_collector.sock',  # nosec
                help='Unix domain socket file to be used'
                     ' to send rpc related metrics'),
-    cfg.IntOpt('prometheus_port', default=3000,
-               help='Port number to expose metrics in prometheus format.'),
+    cfg.PortOpt('prometheus_port', default=3000,
+                help='Port number to expose metrics in prometheus format.'),
 ]
 cfg.CONF.register_opts(oslo_metrics_configs, group='oslo_metrics')
 
