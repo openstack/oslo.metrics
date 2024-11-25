@@ -43,7 +43,6 @@ LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
 logging.register_options(CONF)
 logging.setup(CONF, 'oslo-metrics')
-LOG.logger.setLevel(logging.DEBUG)
 
 
 class MetricsListener():
