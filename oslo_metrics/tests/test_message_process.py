@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
 # a copy of the License at
@@ -28,10 +26,10 @@ import prometheus_client
 class TestProcessMessage(base.BaseTestCase):
 
     def setUp(self):
-        super(TestProcessMessage, self).setUp()
+        super().setUp()
 
     def test_process_counter(self):
-        received_json = """{
+        received_json = b"""{
   "module": "oslo_messaging",
   "name": "rpc_server_invocation_start_total",
   "action": {
@@ -48,7 +46,7 @@ class TestProcessMessage(base.BaseTestCase):
     "method": "get",
     "process": "done"
   }
-}""".encode()
+}"""
 
         with mock.patch.object(
             prometheus_client.Counter, 'inc',
@@ -58,7 +56,7 @@ class TestProcessMessage(base.BaseTestCase):
             mock_inc.assert_called_once_with()
 
     def test_process_histogram(self):
-        received_json = """{
+        received_json = b"""{
   "module": "oslo_messaging",
   "name": "rpc_client_processing_seconds",
   "action": {
@@ -77,7 +75,7 @@ class TestProcessMessage(base.BaseTestCase):
     "fanout": "foo",
     "timeout": 10
   }
-}""".encode()
+}"""
 
         with mock.patch.object(
             prometheus_client.Histogram, 'observe',

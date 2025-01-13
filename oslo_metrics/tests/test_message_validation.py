@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
 # a copy of the License at
@@ -25,7 +23,7 @@ from oslotest import base
 
 class TestMetricValidation(base.BaseTestCase):
     def setUp(self):
-        super(TestMetricValidation, self).setUp()
+        super().setUp()
 
     def assertRaisesWithMessage(self, message, func, *args, **kwargs):
         try:
