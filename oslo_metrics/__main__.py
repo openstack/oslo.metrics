@@ -35,6 +35,8 @@ oslo_metrics_configs = [
                     ' to send rpc related metrics'),
     cfg.PortOpt('prometheus_port', default=3000,
                 help='Port number to expose metrics in prometheus format.'),
+    cfg.IntOpt('metrics_socket_perm', default=0o660,
+               help='Permission set to the unix domain socket file'),
 ]
 cfg.CONF.register_opts(oslo_metrics_configs, group='oslo_metrics')
 
@@ -97,7 +99,7 @@ def main():
     socket_path = cfg.CONF.oslo_metrics.metrics_socket_file
     m = MetricsListener(socket_path)
     try:
-        os.chmod(socket_path, 0o660)  # nosec
+        os.chmod(socket_path, cfg.CONF.oslo_metrics.metrics_socket_perm)
     except OSError:
         LOG.error("Changing the mode of the file failed.... continuing")
     mt = threading.Thread(target=m.serve)

@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Introduced a new configuration option ``metrics_socket_perm`` under
+    the ``oslo_metrics`` group, allowing users to set custom permissions for
+    the Unix domain socket file.
