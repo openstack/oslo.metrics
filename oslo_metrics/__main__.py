@@ -37,6 +37,13 @@ oslo_metrics_configs = [
         default='/var/tmp/metrics_collector.sock',  # noqa: S108
         help='Unix domain socket file to be used to send rpc related metrics',
     ),
+    cfg.StrOpt(
+        'prometheus_host',
+        default='',
+        help='Hostname or IP address to serve metrics. An empty value '
+        '(the default) makes the server bind to all network '
+        'interfaces, equivalent to 0.0.0.0.',
+    ),
     cfg.PortOpt(
         'prometheus_port',
         default=3000,
@@ -139,13 +146,17 @@ def main() -> None:
     global httpd
     if cfg.CONF.oslo_metrics.wsgi_silent_server:
         httpd = make_server(
-            '',
+            CONF.oslo_metrics.prometheus_host,
             CONF.oslo_metrics.prometheus_port,
             app,
             handler_class=_SilentHandler,
         )
     else:
-        httpd = make_server('', CONF.oslo_metrics.prometheus_port, app)
+        httpd = make_server(
+            CONF.oslo_metrics.prometheus_host,
+            CONF.oslo_metrics.prometheus_port,
+            app,
+        )
 
     signal.signal(signal.SIGTERM, handle_sigterm)
 

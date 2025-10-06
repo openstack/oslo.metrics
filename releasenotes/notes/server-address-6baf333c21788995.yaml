@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Added `prometheus_host` option to configure server address for
+    serving metrics.
