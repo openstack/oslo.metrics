@@ -20,6 +20,7 @@ import socket
 import sys
 import threading
 from wsgiref.simple_server import make_server
+from wsgiref.simple_server import WSGIRequestHandler
 
 from oslo_config import cfg
 from oslo_log import log as logging
@@ -37,6 +38,10 @@ oslo_metrics_configs = [
                 help='Port number to expose metrics in prometheus format.'),
     cfg.IntOpt('metrics_socket_perm', default=0o660,
                help='Permission set to the unix domain socket file'),
+    cfg.BoolOpt('wsgi_silent_server', default=True,
+                help='Whether to silence the WSGI server. If disabled, the '
+                     'WSGI server will print all requests it receives on '
+                     'STDOUT. This could be very verbose.'),
 ]
 cfg.CONF.register_opts(oslo_metrics_configs, group='oslo_metrics')
 
@@ -85,6 +90,13 @@ class MetricsListener():
         self.start = False
 
 
+class _SilentHandler(WSGIRequestHandler):
+    """WSGI handler that does not log requests."""
+
+    def log_message(self, format, *args):
+        """Log nothing."""
+
+
 httpd = None
 
 
@@ -109,7 +121,11 @@ def main():
     app = make_wsgi_app()
     try:
         global httpd
-        httpd = make_server('', CONF.oslo_metrics.prometheus_port, app)
+        if cfg.CONF.oslo_metrics.wsgi_silent_server:
+            httpd = make_server('', CONF.oslo_metrics.prometheus_port, app,
+                                handler_class=_SilentHandler)
+        else:
+            httpd = make_server('', CONF.oslo_metrics.prometheus_port, app)
         signal.signal(signal.SIGTERM, handle_sigterm)
         httpd.serve_forever()
     except KeyboardInterrupt:
