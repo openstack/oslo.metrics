@@ -26,13 +26,14 @@ class MetricValidationError(Exception):
         self.message = message
 
 
-class MetricAction():
+class MetricAction:
     actions = ['inc', 'observe']
 
     def __init__(self, action, value):
         if action not in self.actions:
             raise UnSupportedMetricActionError(
-                "%s action is not supported" % action)
+                f"{action} action is not supported"
+            )
         self.action = action
         self.value = value
 
@@ -44,17 +45,15 @@ class MetricAction():
             raise MetricValidationError("action need 'action' field")
         if metric_action_dict["action"] not in cls.actions:
             raise MetricValidationError(
-                "action should be choosen from %s" % cls.actions)
+                f"action should be choosen from {cls.actions}"
+            )
 
     @classmethod
     def from_dict(cls, metric_action_dict):
-        return cls(
-            metric_action_dict["action"],
-            metric_action_dict["value"]
-        )
+        return cls(metric_action_dict["action"], metric_action_dict["value"])
 
 
-class Metric():
+class Metric:
     def __init__(self, module, name, action, **labels):
         self.module = module
         self.name = name
@@ -67,9 +66,9 @@ class Metric():
             "name": self.name,
             "action": {
                 "value": self.action.value,
-                "action": self.action.action
+                "action": self.action.action,
             },
-            "labels": self.labels
+            "labels": self.labels,
         }
         return json.dumps(raw)
 
@@ -81,7 +80,8 @@ class Metric():
             metric_dict["module"],
             metric_dict["name"],
             MetricAction.from_dict(metric_dict["action"]),
-            **metric_dict["labels"])
+            **metric_dict["labels"],
+        )
 
     @classmethod
     def _validate(cls, metric_dict):

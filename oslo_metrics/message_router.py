@@ -21,13 +21,10 @@ from oslo_metrics import message_type
 LOG = logging.getLogger(__name__)
 
 
-MODULE_LISTS = [
-    "oslo_metrics.metrics.oslo_messaging",
-]
+MODULE_LISTS = ["oslo_metrics.metrics.oslo_messaging"]
 
 
-class MessageRouter():
-
+class MessageRouter:
     def __init__(self):
         self.modules = {}
         for m_str in MODULE_LISTS:
@@ -61,8 +58,11 @@ class MessageRouter():
             metric_with_label = getattr(metric_definition, "labels")
             metric_with_label = metric_with_label(**metric.labels)
         except AttributeError as e:
-            LOG.error("Failed to load labels func from metrics %s: %s",
-                      metric.name, e)
+            LOG.error(
+                "Failed to load labels func from metrics %s: %s",
+                metric.name,
+                e,
+            )
             return
         LOG.debug("Get labels with {}: {}", metric.name, metric.labels)
 
@@ -74,8 +74,15 @@ class MessageRouter():
             else:
                 embed_action()
         except AttributeError as e:
-            LOG.error("Failed to perform metric actionv %s, %s: %s",
-                      metric.action.action, metric.action.value, e)
+            LOG.error(
+                "Failed to perform metric actionv %s, %s: %s",
+                metric.action.action,
+                metric.action.value,
+                e,
+            )
             return
-        LOG.debug("Perform action %s for %s metrics",
-                  metric.action.action, metric.name)
+        LOG.debug(
+            "Perform action %s for %s metrics",
+            metric.action.action,
+            metric.name,
+        )

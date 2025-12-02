@@ -30,18 +30,28 @@ from oslo_metrics import message_router
 
 
 oslo_metrics_configs = [
-    cfg.StrOpt('metrics_socket_file',
-               default='/var/tmp/metrics_collector.sock',  # nosec
-               help='Unix domain socket file to be used'
-                    ' to send rpc related metrics'),
-    cfg.PortOpt('prometheus_port', default=3000,
-                help='Port number to expose metrics in prometheus format.'),
-    cfg.IntOpt('metrics_socket_perm', default=0o660,
-               help='Permission set to the unix domain socket file'),
-    cfg.BoolOpt('wsgi_silent_server', default=True,
-                help='Whether to silence the WSGI server. If disabled, the '
-                     'WSGI server will print all requests it receives on '
-                     'STDOUT. This could be very verbose.'),
+    cfg.StrOpt(
+        'metrics_socket_file',
+        default='/var/tmp/metrics_collector.sock',  # noqa: S108
+        help='Unix domain socket file to be used to send rpc related metrics',
+    ),
+    cfg.PortOpt(
+        'prometheus_port',
+        default=3000,
+        help='Port number to expose metrics in prometheus format.',
+    ),
+    cfg.IntOpt(
+        'metrics_socket_perm',
+        default=0o660,
+        help='Permission set to the unix domain socket file',
+    ),
+    cfg.BoolOpt(
+        'wsgi_silent_server',
+        default=True,
+        help='Whether to silence the WSGI server. If disabled, the '
+        'WSGI server will print all requests it receives on '
+        'STDOUT. This could be very verbose.',
+    ),
 ]
 cfg.CONF.register_opts(oslo_metrics_configs, group='oslo_metrics')
 
@@ -52,8 +62,7 @@ logging.register_options(CONF)
 logging.setup(CONF, 'oslo-metrics')
 
 
-class MetricsListener():
-
+class MetricsListener:
     def __init__(self, socket_path):
         self.socket_path = socket_path
         self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
@@ -73,7 +82,8 @@ class MetricsListener():
     def serve(self):
         while self.start:
             readable, writable, exceptional = select.select(
-                [self.socket], [], [], 1)
+                [self.socket], [], [], 1
+            )
             if len(readable) == 0:
                 continue
             try:
@@ -82,7 +92,7 @@ class MetricsListener():
                 msg = self.socket.recv(65565)
                 LOG.debug("got message")
                 self.router.process(msg)
-            except socket.timeout:
+            except TimeoutError:
                 pass
 
     def stop(self):
@@ -122,8 +132,12 @@ def main():
     try:
         global httpd
         if cfg.CONF.oslo_metrics.wsgi_silent_server:
-            httpd = make_server('', CONF.oslo_metrics.prometheus_port, app,
-                                handler_class=_SilentHandler)
+            httpd = make_server(
+                '',
+                CONF.oslo_metrics.prometheus_port,
+                app,
+                handler_class=_SilentHandler,
+            )
         else:
             httpd = make_server('', CONF.oslo_metrics.prometheus_port, app)
         signal.signal(signal.SIGTERM, handle_sigterm)

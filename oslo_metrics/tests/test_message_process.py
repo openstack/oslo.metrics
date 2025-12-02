@@ -24,7 +24,6 @@ import prometheus_client
 
 
 class TestProcessMessage(base.BaseTestCase):
-
     def setUp(self):
         super().setUp()
 
@@ -48,9 +47,7 @@ class TestProcessMessage(base.BaseTestCase):
   }
 }"""
 
-        with mock.patch.object(
-            prometheus_client.Counter, 'inc',
-        ) as mock_inc:
+        with mock.patch.object(prometheus_client.Counter, 'inc') as mock_inc:
             router = message_router.MessageRouter()
             router.process(received_json)
             mock_inc.assert_called_once_with()
@@ -78,7 +75,7 @@ class TestProcessMessage(base.BaseTestCase):
 }"""
 
         with mock.patch.object(
-            prometheus_client.Histogram, 'observe',
+            prometheus_client.Histogram, 'observe'
         ) as mock_inc:
             router = message_router.MessageRouter()
             router.process(received_json)
