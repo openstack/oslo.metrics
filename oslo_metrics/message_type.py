@@ -14,22 +14,28 @@
 # under the License.
 
 import json
+from typing import Any, TypedDict
 
 
 class UnSupportedMetricActionError(Exception):
-    def __init__(self, message=None):
+    def __init__(self, message: str | None = None) -> None:
         self.message = message
 
 
 class MetricValidationError(Exception):
-    def __init__(self, message=None):
+    def __init__(self, message: str | None = None) -> None:
         self.message = message
+
+
+class _MetricActionDict(TypedDict, total=False):
+    action: str
+    value: str
 
 
 class MetricAction:
     actions = ['inc', 'observe']
 
-    def __init__(self, action, value):
+    def __init__(self, action: str, value: str) -> None:
         if action not in self.actions:
             raise UnSupportedMetricActionError(
                 f"{action} action is not supported"
@@ -38,7 +44,7 @@ class MetricAction:
         self.value = value
 
     @classmethod
-    def validate(cls, metric_action_dict):
+    def validate(cls, metric_action_dict: _MetricActionDict) -> None:
         if "value" not in metric_action_dict:
             raise MetricValidationError("action need 'value' field")
         if "action" not in metric_action_dict:
@@ -49,18 +55,22 @@ class MetricAction:
             )
 
     @classmethod
-    def from_dict(cls, metric_action_dict):
+    def from_dict(
+        cls, metric_action_dict: _MetricActionDict
+    ) -> 'MetricAction':
         return cls(metric_action_dict["action"], metric_action_dict["value"])
 
 
 class Metric:
-    def __init__(self, module, name, action, **labels):
+    def __init__(
+        self, module: str, name: str, action: MetricAction, **labels: str
+    ) -> None:
         self.module = module
         self.name = name
         self.action = action
         self.labels = labels
 
-    def to_json(self):
+    def to_json(self) -> str:
         raw = {
             "module": self.module,
             "name": self.name,
@@ -73,7 +83,7 @@ class Metric:
         return json.dumps(raw)
 
     @classmethod
-    def from_json(cls, encoded):
+    def from_json(cls, encoded: str) -> 'Metric':
         metric_dict = json.loads(encoded)
         cls._validate(metric_dict)
         return Metric(
@@ -84,7 +94,7 @@ class Metric:
         )
 
     @classmethod
-    def _validate(cls, metric_dict):
+    def _validate(cls, metric_dict: dict[str, Any]) -> None:
         if "module" not in metric_dict:
             raise MetricValidationError("module should be specified")
 

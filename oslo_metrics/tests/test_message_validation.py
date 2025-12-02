@@ -12,13 +12,16 @@
 
 """
 test_message_validation
---------------------
+-----------------------
+
 Check that messages validation is working properly
 """
 
 import json
+from typing import Any
+
 from oslo_metrics import message_type
-from oslotest import base
+from oslotest import base  # type: ignore
 
 
 class TestMetricValidation(base.BaseTestCase):
@@ -29,11 +32,14 @@ class TestMetricValidation(base.BaseTestCase):
         try:
             func(*args, **kwargs)
             self.assertFail()
-        except Exception as e:
+        except (
+            message_type.MetricValidationError,
+            message_type.UnSupportedMetricActionError,
+        ) as e:
             self.assertEqual(message, e.message)
 
     def test_message_validation(self):
-        metric = {}
+        metric: dict[str, Any] = {}
         message = "module should be specified"
         self.assertRaisesWithMessage(
             message, message_type.Metric.from_json, json.dumps(metric)

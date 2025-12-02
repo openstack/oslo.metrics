@@ -13,13 +13,14 @@
 """
 test_message_process
 --------------------
+
 Check that messages are processed correctly
 """
 
 from unittest import mock
 
 from oslo_metrics import message_router
-from oslotest import base
+from oslotest import base  # type: ignore
 import prometheus_client
 
 

@@ -13,7 +13,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from oslo_log import log as logging
+from oslo_log import log as logging  # type: ignore
 from oslo_utils import importutils
 
 from oslo_metrics import message_type
@@ -25,7 +25,7 @@ MODULE_LISTS = ["oslo_metrics.metrics.oslo_messaging"]
 
 
 class MessageRouter:
-    def __init__(self):
+    def __init__(self) -> None:
         self.modules = {}
         for m_str in MODULE_LISTS:
             mod = importutils.try_import(m_str, False)
@@ -33,14 +33,14 @@ class MessageRouter:
                 LOG.error("Failed to load module %s", m_str)
             self.modules[m_str.split('.')[-1]] = mod
 
-    def process(self, raw_string):
+    def process(self, raw_string: bytes) -> None:
         try:
             metric = message_type.Metric.from_json(raw_string.decode())
             self.dispatch(metric)
         except Exception as e:
             LOG.error("Failed to parse: %s", e)
 
-    def dispatch(self, metric):
+    def dispatch(self, metric: message_type.Metric) -> None:
         if metric.module not in self.modules:
             LOG.error("Failed to lookup modules by %s", metric.module)
             return

@@ -19,11 +19,13 @@ import signal
 import socket
 import sys
 import threading
+from types import FrameType
+from typing import Any
 from wsgiref.simple_server import make_server
 from wsgiref.simple_server import WSGIRequestHandler
 
-from oslo_config import cfg
-from oslo_log import log as logging
+from oslo_config import cfg  # type: ignore
+from oslo_log import log as logging  # type: ignore
 from prometheus_client import make_wsgi_app
 
 from oslo_metrics import message_router
@@ -63,7 +65,7 @@ logging.setup(CONF, 'oslo-metrics')
 
 
 class MetricsListener:
-    def __init__(self, socket_path):
+    def __init__(self, socket_path: str) -> None:
         self.socket_path = socket_path
         self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
         self.unlink(socket_path)
@@ -72,14 +74,14 @@ class MetricsListener:
         self.start = True
         self.router = message_router.MessageRouter()
 
-    def unlink(self, socket_path):
+    def unlink(self, socket_path: str) -> None:
         try:
             os.unlink(socket_path)
         except OSError:
             if os.path.exists(socket_path):
                 raise
 
-    def serve(self):
+    def serve(self) -> None:
         while self.start:
             readable, writable, exceptional = select.select(
                 [self.socket], [], [], 1
@@ -95,7 +97,7 @@ class MetricsListener:
             except TimeoutError:
                 pass
 
-    def stop(self):
+    def stop(self) -> None:
         self.socket.close()
         self.start = False
 
@@ -103,20 +105,24 @@ class MetricsListener:
 class _SilentHandler(WSGIRequestHandler):
     """WSGI handler that does not log requests."""
 
-    def log_message(self, format, *args):
+    def log_message(self, format: str, *args: Any) -> None:
         """Log nothing."""
 
 
 httpd = None
 
 
-def handle_sigterm(_signum, _frame):
+def handle_sigterm(_signum: int, _frame: FrameType | None) -> None:
+    if httpd is None:
+        # this should never happen
+        raise RuntimeError('httpd is uninitialized')
+
     LOG.debug("Caught sigterm")
     shutdown_thread = threading.Thread(target=httpd.shutdown)
     shutdown_thread.start()
 
 
-def main():
+def main() -> None:
     cfg.CONF(sys.argv[1:])
     socket_path = cfg.CONF.oslo_metrics.metrics_socket_file
     m = MetricsListener(socket_path)
@@ -129,18 +135,21 @@ def main():
     mt.start()
 
     app = make_wsgi_app()
+
+    global httpd
+    if cfg.CONF.oslo_metrics.wsgi_silent_server:
+        httpd = make_server(
+            '',
+            CONF.oslo_metrics.prometheus_port,
+            app,
+            handler_class=_SilentHandler,
+        )
+    else:
+        httpd = make_server('', CONF.oslo_metrics.prometheus_port, app)
+
+    signal.signal(signal.SIGTERM, handle_sigterm)
+
     try:
-        global httpd
-        if cfg.CONF.oslo_metrics.wsgi_silent_server:
-            httpd = make_server(
-                '',
-                CONF.oslo_metrics.prometheus_port,
-                app,
-                handler_class=_SilentHandler,
-            )
-        else:
-            httpd = make_server('', CONF.oslo_metrics.prometheus_port, app)
-        signal.signal(signal.SIGTERM, handle_sigterm)
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
