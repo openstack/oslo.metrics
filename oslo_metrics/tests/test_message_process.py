@@ -20,7 +20,7 @@ Check that messages are processed correctly
 from unittest import mock
 
 from oslo_metrics import message_router
-from oslotest import base  # type: ignore
+from oslotest import base
 import prometheus_client
 
 

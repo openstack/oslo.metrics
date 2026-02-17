@@ -21,7 +21,7 @@ import json
 from typing import Any
 
 from oslo_metrics import message_type
-from oslotest import base  # type: ignore
+from oslotest import base
 
 
 class TestMetricValidation(base.BaseTestCase):

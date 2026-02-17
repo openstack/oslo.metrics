@@ -24,7 +24,7 @@ from typing import Any
 from wsgiref.simple_server import make_server
 from wsgiref.simple_server import WSGIRequestHandler
 
-from oslo_config import cfg  # type: ignore
+from oslo_config import cfg
 from oslo_log import log as logging
 from prometheus_client import make_wsgi_app
 
