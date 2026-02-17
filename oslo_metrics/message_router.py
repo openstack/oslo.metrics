@@ -13,7 +13,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from oslo_log import log as logging  # type: ignore
+from oslo_log import log as logging
 from oslo_utils import importutils
 
 from oslo_metrics import message_type
