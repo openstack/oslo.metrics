@@ -50,7 +50,7 @@ class MessageRouter:
         try:
             metric_definition = getattr(mod, metric.name)
         except AttributeError as e:
-            LOG.error("Failed to load metrics {}: {}", metric.name, e)
+            LOG.error("Failed to load metrics %s: %s", metric.name, e)
             return
 
         # Get labels
@@ -64,7 +64,7 @@ class MessageRouter:
                 e,
             )
             return
-        LOG.debug("Get labels with {}: {}", metric.name, metric.labels)
+        LOG.debug("Get labels with %s: %s", metric.name, metric.labels)
 
         # perform action
         try:
