@@ -31,12 +31,13 @@ class TestMetricValidation(base.BaseTestCase):
     def assertRaisesWithMessage(self, message, func, *args, **kwargs):
         try:
             func(*args, **kwargs)
-            self.assertFail()
         except (
             message_type.MetricValidationError,
             message_type.UnSupportedMetricActionError,
         ) as e:
             self.assertEqual(message, e.message)
+        else:
+            raise Exception('failed to raise exception')
 
     def test_message_validation(self):
         metric: dict[str, Any] = {}
