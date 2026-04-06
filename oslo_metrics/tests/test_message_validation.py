@@ -37,7 +37,7 @@ class TestMetricValidation(base.BaseTestCase):
         ) as e:
             self.assertEqual(message, e.message)
         else:
-            raise Exception('failed to raise exception')
+            self.fail('failed to raise exception')
 
     def test_message_validation(self):
         metric: dict[str, Any] = {}
