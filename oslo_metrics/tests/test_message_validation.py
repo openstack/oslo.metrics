@@ -25,59 +25,59 @@ from oslotest import base
 
 
 class TestMetricValidation(base.BaseTestCase):
-    def setUp(self):
-        super().setUp()
-
-    def assertRaisesWithMessage(self, message, func, *args, **kwargs):
-        try:
-            func(*args, **kwargs)
-        except (
-            message_type.MetricValidationError,
-            message_type.UnSupportedMetricActionError,
-        ) as e:
-            self.assertEqual(message, e.message)
-        else:
-            self.fail('failed to raise exception')
-
     def test_message_validation(self):
         metric: dict[str, Any] = {}
-        message = "module should be specified"
-        self.assertRaisesWithMessage(
-            message, message_type.Metric.from_json, json.dumps(metric)
+        self.assertRaisesRegex(
+            message_type.MetricValidationError,
+            r"^module should be specified$",
+            message_type.Metric.from_json,
+            json.dumps(metric),
         )
 
         metric['module'] = "test"
-        message = "name should be specified"
-        self.assertRaisesWithMessage(
-            message, message_type.Metric.from_json, json.dumps(metric)
+        self.assertRaisesRegex(
+            message_type.MetricValidationError,
+            r"^name should be specified$",
+            message_type.Metric.from_json,
+            json.dumps(metric),
         )
 
         metric['name'] = "test"
-        message = "action should be specified"
-        self.assertRaisesWithMessage(
-            message, message_type.Metric.from_json, json.dumps(metric)
+        self.assertRaisesRegex(
+            message_type.MetricValidationError,
+            r"^action should be specified$",
+            message_type.Metric.from_json,
+            json.dumps(metric),
         )
 
         metric['action'] = "test"
-        message = "labels should be specified"
-        self.assertRaisesWithMessage(
-            message, message_type.Metric.from_json, json.dumps(metric)
+        self.assertRaisesRegex(
+            message_type.MetricValidationError,
+            r"^labels should be specified$",
+            message_type.Metric.from_json,
+            json.dumps(metric),
         )
 
         metric['labels'] = "test_label"
-        message = "action need 'value' field"
-        self.assertRaisesWithMessage(
-            message, message_type.Metric.from_json, json.dumps(metric)
+        self.assertRaisesRegex(
+            message_type.MetricValidationError,
+            r"^action need 'value' field$",
+            message_type.Metric.from_json,
+            json.dumps(metric),
         )
 
         metric['action'] = {"value": "1"}
-        message = "action need 'action' field"
-        self.assertRaisesWithMessage(
-            message, message_type.Metric.from_json, json.dumps(metric)
+        self.assertRaisesRegex(
+            message_type.MetricValidationError,
+            r"^action need 'action' field$",
+            message_type.Metric.from_json,
+            json.dumps(metric),
         )
 
         metric['action']['action'] = "test"
-        message = "action should be choosen from ['inc', 'observe']"
-        self.assertRaisesWithMessage(
-            message, message_type.Metric.from_json, json.dumps(metric)
+        self.assertRaisesRegex(
+            message_type.MetricValidationError,
+            r"^action should be choosen from \['inc', 'observe'\]$",
+            message_type.Metric.from_json,
+            json.dumps(metric),
         )
