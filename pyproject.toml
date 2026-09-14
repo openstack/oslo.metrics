@@ -36,7 +36,7 @@ Homepage = "https://docs.openstack.org/oslo.metrics"
 Repository = "https://opendev.org/openstack/oslo.metrics"
 
 [tool.setuptools.packages.find]
-include = ["oslo_metrics"]
+include = ["oslo_metrics*"]
 
 [tool.mypy]
 python_version = "3.11"
