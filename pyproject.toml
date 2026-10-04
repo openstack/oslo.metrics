@@ -39,6 +39,19 @@ Repository = "https://opendev.org/openstack/oslo.metrics"
 [tool.setuptools.packages.find]
 include = ["oslo_metrics*"]
 
+[tool.coverage.run]
+source = [
+    "oslo_metris"
+]
+branch = true
+omit = [
+    "oslo_metris/tests/*"
+]
+
+[tool.coverage.report]
+ignore_errors = true
+show_missing = true
+
 [tool.mypy]
 python_version = "3.11"
 show_column_numbers = true
