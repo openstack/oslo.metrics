@@ -41,11 +41,12 @@ include = ["oslo_metrics*"]
 
 [tool.coverage.run]
 source = [
-    "oslo_metris"
+    "oslo_metrics"
 ]
 branch = true
+parallel = true
 omit = [
-    "oslo_metris/tests/*"
+    "oslo_metrics/tests/*"
 ]
 
 [tool.coverage.report]
